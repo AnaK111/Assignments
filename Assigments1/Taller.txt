@@ -1,0 +1,38 @@
+-- TALLER
+
+-- lAURA RAMIREZ RUIZ
+-- JUAN ESTEBAN MACHUCA
+-- ANA KARINA LARGO RAMOS
+
+-- 1. Create 2 Tablespaces: one with 1 Gb and 2 datafiles, tablespace should be named " vehicles_fleet "
+--    and the other one with the name " test_purposes " with 500 Mb and 1 datafile. (0.5)
+
+CREATE TABLESPACE VEHICLES_FLEET DATAFILE 
+'Vehicles_fleet1.dbf' SIZE 100M,
+'Vehicles_fleet2.dbf' SIZE 100M
+AUTOEXTEND ON NEXT 1000K MAXSIZE 1024M
+EXTENT MANAGEMENT LOCAL 
+SEGMENT SPACE MANAGEMENT AUTO
+ONLINE;
+
+CREATE TABLESPACE TEST_PURPOSES DATAFILE 
+'test_purposes1.dbf' SIZE 100M
+AUTOEXTEND ON NEXT 100K MAXSIZE 500M
+EXTENT MANAGEMENT LOCAL 
+SEGMENT SPACE MANAGEMENT AUTO
+ONLINE;
+
+-- 2. Create an Undo tablespace with 5Mb of space and 1 datafile.
+
+CREATE UNDO TABLESPACE UNDO_TBS datafile
+ 'UNDO_TBS1.dbf' size 5M
+AUTOEXTEND OFF;
+
+-------------------------------------------------------------------
+select * from SYS.DBA_TABLESPACES;
+select * from DBA_DATA_FILES;
+-------------------------------------------------------------------
+
+-- 3.Set the undo tablespace to be used in the system.
+
+ALTER SYSTEM SET UNDO_TABLESPACE = UNDO_TBS scope = both;
