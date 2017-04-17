@@ -125,3 +125,50 @@ from DBA_ROLES
 REVOKE ALL PRIVILEGES FROM WITHOUT_PRIVILEGES;  
 
 
+
+--8. Create 4 users, assign them the tablespace "vehicles_fleet?"; profiles created should be used for the
+--users, all the users should be allow to connect to the database. Use the role "without_privileges"? for
+--users associate with profiles: manager_profile?, finance_profile? and service_profile?.
+
+
+CREATE USER USER1 IDENTIFIED BY USER1
+DEFAULT TABLESPACE  VEHICLES_FLEET
+PROFILE MANAGER_PROFILE;
+
+GRANT WITHOUT_PRIVILEGES TO USER1;
+
+CREATE USER USER2 IDENTIFIED BY USER2
+DEFAULT TABLESPACE  VEHICLES_FLEET
+PROFILE FINANCE_PROFILE;
+
+GRANT WITHOUT_PRIVILEGES TO USER2;
+
+
+
+CREATE USER USER3 IDENTIFIED BY USER3
+DEFAULT TABLESPACE  VEHICLES_FLEET
+PROFILE SERVICE_PROFILE;
+
+GRANT WITHOUT_PRIVILEGES TO USER3;
+
+
+CREATE USER USER4 IDENTIFIED BY USER4
+DEFAULT TABLESPACE  VEHICLES_FLEET
+PROFILE DESARROLLO;
+
+
+--9. Lock the users associate with profiles: manager_profile?, finance_profile? and service_profile?.
+ALTER USER USER1
+ACCOUNT LOCK ;  
+
+ALTER USER USER2
+ACCOUNT LOCK ; 
+
+ALTER USER USER3
+ACCOUNT LOCK ;
+
+
+--10. Delete the tablespace called "test_purposes?"
+DROP TABLESPACE TEST_PURPOSES;
+
+
