@@ -451,4 +451,50 @@ INSERT INTO `Vehicles` (`Id_Vehicles`,`Registration_number`,`Plate`,`Status`,`Mi
 INSERT INTO `Vehicles` (`Id_Vehicles`,`Registration_number`,`Plate`,`Status`,`Mileage`,`Vehicle_model`,`Current_value`,`Replacement_value`,`Taxe_date`,`Certain_date`,`Id_Type_vehicles`,`Id_Drivers`) VALUES (99,44,7,'Erat Nonummy Ultricies Foundation','1697031417799','01/04/10','1677100390199','1648012453499','02/17/18','19/11/17',74,99);
 INSERT INTO `Vehicles` (`Id_Vehicles`,`Registration_number`,`Plate`,`Status`,`Mileage`,`Vehicle_model`,`Current_value`,`Replacement_value`,`Taxe_date`,`Certain_date`,`Id_Type_vehicles`,`Id_Drivers`) VALUES (100,90,6,'Risus Nunc Ac Foundation','1608042684799','06/09/10','1683032770499','1689071355099','10/11/17','30/09/17',45,100);
 
+ 
+
+-------------------------------------------------------------------------------------------------------------------- 
+-- 4. Create a view which should be run only by users associated to "finance_profile ". The view should looklike this:
+
+ CREATE VIEW view_finance_profile AS (
+ SELECT 
+        vh.Registration_number,
+        vh.Mileage,
+        vh.Model, 
+        vh.Current_value,
+        tv.Class_vehicles,
+        vh.Replacement_Value,
+        vh.Status,
+        dq.Status,
+        count(se.Id_services) as 'Number_of_services',
+        sum(rc.Amount * rc.Value_costs) as 'Total_money_spent_in_repairs'
+ FROM Repair_costs rc 
+ INNER JOIN Vehicles vh ON 
+ rc.Id_vehicles == vh.Id_Vehicles 
+ INNER JOIN Services se ON 
+ vh.Id_Vehicles == se.Id_vehicles
+ INNER JOIN Type_vehicles  tv ON 
+ vh.Id_Vehicles == tv.Id_Type_vehicles
+ INNER JOIN Driver_qualification dq ON
+ tv.Id_driver_qualification == dq.Id_driver_qualification
+ WHERE tv.Class_vehicles == ('Car') 
+ OR tv.Class_vehicles == ('Light rigid heavy vehicle')
+ OR tv.Class_vehicles == ('Medium rigid heavy vehicle')
+ OR tv.Class_vehicles == ('Tractor') AND vh.Taxe_date >= '20/05/17'
+ ORDER BY vh.Mileage DESC );
+ 
+--7.Create a trigger which once the mileage column is updated, call the procedure just created. (0.5)
+
+CREATE OR REPLACE TRIGGER EXEC_TRIGGER 
+  AFTER UPDATE OF Mileage ON Vehicles FOR EACH ROW 
+    BEGIN
+    DBMS_OUTPUT.PUT_LINE('Ejecutando actualización, Id_Vehicles: ' || :OLD.VEHICLE_ID || ', NEW MILEAGE: ' || :NEW.MILEAGE);
+    ASSOCIATE_SERVICES_VEHICLE(:OLD.VEHICLE_ID, :NEW.MILEAGE);	
+
+
+ 
+--Asignando permisos de SELECCIÓN al usuario que tiene como perfil finance_profile
+ 
+grant select on finance_profile to USUARIO2;
   
+ 
