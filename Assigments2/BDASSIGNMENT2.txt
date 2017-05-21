@@ -1,0 +1,210 @@
+---ASSIGMENT 1
+
+-- 1. Create 2 Tablespaces: one with 1 Gb and 2 datafiles, tablespace should be named " vehicles_fleet "
+--    and the other one with the name " test_purposes " with 500 Mb and 1 datafile. (0.5)
+
+CREATE TABLESPACE VEHICLES_FLEET DATAFILE 
+'Vehicles_fleet1.dbf' SIZE 500M,
+'Vehicles_fleet2.dbf' SIZE 500M
+AUTOEXTEND ON NEXT 2000K MAXSIZE 1G
+EXTENT MANAGEMENT LOCAL 
+SEGMENT SPACE MANAGEMENT AUTO
+ONLINE;
+
+CREATE TABLESPACE TEST_PURPOSES DATAFILE 
+'test_purposes1.dbf' SIZE 500M
+AUTOEXTEND ON NEXT 100K MAXSIZE 500M
+EXTENT MANAGEMENT LOCAL 
+SEGMENT SPACE MANAGEMENT AUTO
+ONLINE;
+-- 1. Create 2 Tablespaces: one with 1 Gb and 2 datafiles, tablespace should be named " vehicles_fleet "
+--    and the other one with the name " test_purposes " with 500 Mb and 1 datafile. (0.5)
+
+CREATE TABLESPACE VEHICLES_FLEET DATAFILE 
+'Vehicles_fleet1.dbf' SIZE 500M,
+'Vehicles_fleet2.dbf' SIZE 500M
+AUTOEXTEND ON NEXT 2000K MAXSIZE 1G
+EXTENT MANAGEMENT LOCAL 
+SEGMENT SPACE MANAGEMENT AUTO
+ONLINE;
+
+CREATE TABLESPACE TEST_PURPOSES DATAFILE 
+'test_purposes1.dbf' SIZE 500M
+AUTOEXTEND ON NEXT 100K MAXSIZE 500M
+EXTENT MANAGEMENT LOCAL 
+SEGMENT SPACE MANAGEMENT AUTO
+ONLINE;
+
+-- 1. Create 2 Tablespaces: one with 1 Gb and 2 datafiles, tablespace should be named " vehicles_fleet "
+--    and the other one with the name " test_purposes " with 500 Mb and 1 datafile. (0.5)
+
+CREATE TABLESPACE VEHICLES_FLEET DATAFILE 
+'Vehicles_fleet1.dbf' SIZE 500M,
+'Vehicles_fleet2.dbf' SIZE 500M
+AUTOEXTEND ON NEXT 2000K MAXSIZE 1G
+EXTENT MANAGEMENT LOCAL 
+SEGMENT SPACE MANAGEMENT AUTO
+ONLINE;
+
+CREATE TABLESPACE TEST_PURPOSES DATAFILE 
+'test_purposes1.dbf' SIZE 500M
+AUTOEXTEND ON NEXT 100K MAXSIZE 500M
+EXTENT MANAGEMENT LOCAL 
+SEGMENT SPACE MANAGEMENT AUTO
+ONLINE;
+-- 1. Create 2 Tablespaces: one with 1 Gb and 2 datafiles, tablespace should be named " vehicles_fleet "
+--    and the other one with the name " test_purposes " with 500 Mb and 1 datafile. (0.5)
+
+CREATE TABLESPACE VEHICLES_FLEET DATAFILE 
+'Vehicles_fleet1.dbf' SIZE 500M,
+'Vehicles_fleet2.dbf' SIZE 500M
+AUTOEXTEND ON NEXT 2000K MAXSIZE 1G
+EXTENT MANAGEMENT LOCAL 
+SEGMENT SPACE MANAGEMENT AUTO
+ONLINE;
+
+CREATE TABLESPACE TEST_PURPOSES DATAFILE 
+'test_purposes1.dbf' SIZE 500M
+AUTOEXTEND ON NEXT 100K MAXSIZE 500M
+EXTENT MANAGEMENT LOCAL 
+SEGMENT SPACE MANAGEMENT AUTO
+ONLINE;
+
+
+--------2. Create tables with its columns according to your normalization. Create sequences for every primary
+--------key, create constraints for columns which are "status". Create primary and foreign keys. Insert at least
+--------20 vehicles (At least one of each class), 50 drivers, 10 insurance claims, 5 services (Go to
+--------http://www.generatedata.com/). This should be a functional single script (.sql) (Better if you generate
+--------sql through sql developer) (0.5)
+
+
+create table Driver_qualification
+(
+Id_driver_qualification int primary key,
+Status varchar2(13) not null CHECK (Status IN ('Activo', 'Inactivo', 'Expirado','Descalificado')), 
+Assigment_date date not null
+)
+
+create table Type_Service
+(
+Id_Type_Service int primary key,
+Name_Type_Service varchar2(20) not null
+)
+
+create table Drivers
+(
+Id_Drivers int primary key,
+Full_name varchar2(40) not null,
+Phone varchar2(20) not null
+)
+
+Create table Type_vehicles
+(
+Id_Type_vehicles int  primary key,
+Class_vehicles varchar2(30) not null,
+Id_driver_qualification int not null,
+CONSTRAINT fk_Driver_qualification FOREIGN KEY (Id_driver_qualification) REFERENCES Driver_qualification(Id_driver_qualification)
+)
+
+create table Vehicles
+(
+Id_Vehicles int primary key,
+Registration_number int not null,
+Plate varchar2(10) not null,
+Status varchar2(10) not null CHECK (Status IN ('activo', 'inactivo', 'reparación','Vendido')), 
+Mileage number(30) not null,
+Vehicle_model int not null, 
+Current_value number(30) not null,
+Replacement_value number(30) not null,
+Taxe_date date not null,
+Certain_date date not null,
+Id_Type_vehicles int not null,
+Id_Drivers int not null,
+CONSTRAINT fk_Type_vehicles FOREIGN KEY (Id_Type_vehicles) REFERENCES Type_vehicles(Id_Type_vehicles),
+CONSTRAINT fk_Drivers FOREIGN KEY (Id_Drivers) REFERENCES Drivers(Id_Drivers)
+)
+
+create table Repair_costs
+(
+ Id_Repair_costs int primary key,
+ Date_Repair_costs date not null,
+ Description_Repair_costs varchar2(40) not null,
+ Amount int not null,
+ Value_costs number(30) not null,
+ Status varchar2(10) not null CHECK (Status IN ('Pendiente', 'Pago')),
+ Id_vehicles int not null,
+ CONSTRAINT fk_Vehicles_r FOREIGN KEY (Id_vehicles) REFERENCES Vehicles(Id_vehicles)
+)
+
+create table Services
+(
+Id_services int primary key,
+Name varchar2(20) not null,
+Issue_date date not null,
+Status varchar2(20) not null CHECK (Status IN ('pendiente', 'programado', 'ok')),
+Id_vehicles int not null,
+CONSTRAINT fk_Vehicles FOREIGN KEY (Id_vehicles) REFERENCES Vehicles(Id_vehicles)
+)
+
+create table Services_details
+(
+Id_Service_Details int primary key,
+Id_services int not null,
+Id_Type_Service int not null,
+CONSTRAINT fk_Services FOREIGN KEY (Id_services) REFERENCES Services(Id_services),
+CONSTRAINT fk_Type_Service_S FOREIGN KEY (Id_Type_Service) REFERENCES Type_Service(Id_Type_Service)
+)
+
+create table Insurance_Claim
+(
+Policy_number int primary key,
+Lass_date date not null,
+Date_of_issue date not null,
+Nature_of_payment varchar2(20) not null,
+Damages varchar2(20) not null,
+Id_Vehicles int not null,
+CONSTRAINT fk_Vehicles_I FOREIGN KEY (Id_vehicles) REFERENCES Vehicles(Id_vehicles)
+)
+
+
+CREATE SEQUENCE Type_vehicles_sequence 
+  START WITH 1
+  INCREMENT BY 1;
+  
+CREATE SEQUENCE Repair_costs_sequence 
+  START WITH 1
+  INCREMENT BY 1;
+  
+CREATE SEQUENCE accounts_sequence 
+  START WITH 1
+  INCREMENT BY 1;
+  
+  CREATE SEQUENCE Services_sequence 
+  START WITH 1
+  INCREMENT BY 1;
+  
+CREATE SEQUENCE Services_details_sequence 
+  START WITH 1
+  INCREMENT BY 1;
+  
+CREATE SEQUENCE Drivers_sequence 
+  START WITH 1
+  INCREMENT BY 1;
+  
+CREATE SEQUENCE Driver_qualification_sequence 
+  START WITH 1
+  INCREMENT BY 1;
+  
+CREATE SEQUENCE Vehicles_sequence 
+  START WITH 1
+  INCREMENT BY 1;
+  
+CREATE SEQUENCE Insurance_Claim_sequence 
+  START WITH 1
+  INCREMENT BY 1;
+  
+CREATE SEQUENCE Type_Service_sequence 
+  START WITH 1
+  INCREMENT BY 1;
+  
+  
